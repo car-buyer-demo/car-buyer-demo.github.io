@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Shared by link with one business at a time, never meant to be found. -->
+  <meta name="robots" content="noindex">
+  <title>Coches al Contado · Solicitudes desde tus tarjetas</title>
+  <meta name="description" content="Una demo que funciona: el formulario que rellena un vendedor al escanear tu tarjeta, y la app donde llega la solicitud con una notificación.">
+  <meta name="theme-color" content="#0b0c0c">
+  <script>
+    // A named link (?name=...&color=...) shows the page in that business's
+    // look; stay hidden for the moment it takes, never longer.
+    if (/[?&](name|color)=/.test(location.search)) {
+      document.documentElement.classList.add('pending');
+      setTimeout(function () { document.documentElement.classList.remove('pending'); }, 1500);
+    }
+  </script>
+  <style>
+    @font-face { font-family: Geist; font-weight: 400; font-display: swap; src: url(../assets/fonts/geist-400.woff2) format("woff2"); }
+    @font-face { font-family: Geist; font-weight: 600; font-display: swap; src: url(../assets/fonts/geist-600.woff2) format("woff2"); }
+    @font-face { font-family: Geist; font-weight: 800; font-display: swap; src: url(../assets/fonts/geist-800.woff2) format("woff2"); }
+    @font-face { font-family: "Geist Mono"; font-weight: 500; font-display: swap; src: url(../assets/fonts/geist-mono-500.woff2) format("woff2"); }
+
+    /* The accent is the business's color: brand.js puts it in from the link,
+       as an instance does from BRAND_COLOR. */
+    :root {
+      --bg: #0b0c0c;
+      --surface: #161717;
+      --line: #262828;
+      --text: #f4f3ee;
+      --muted: #a5a7a2;
+      --faint: #7c7e7a;
+      --accent: #c7f747;
+      --on-accent: #111212;
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 400 17px/1.55 Geist, system-ui, -apple-system, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      transition: opacity .2s;
+    }
+    .pending body { opacity: 0; }
+    a { color: inherit; }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+    header.top { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 10px; min-width: 0; font: 700 13px/1.2 Geist, sans-serif; letter-spacing: .14em; text-transform: uppercase; }
+    .mark { flex: none; width: 24px; height: 24px; border-radius: 7px; background: var(--accent); }
+    .mark svg { display: block; width: 100%; height: 100%; }
+    .badge { flex: none; font: 500 12px/1 "Geist Mono", ui-monospace, monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 8px 12px; }
+
+    .hero { display: grid; grid-template-columns: 1fr; gap: 36px; padding: 28px 0 8px; align-items: center; }
+    .kicker { font: 500 12px/1 "Geist Mono", ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+    .kicker::before { content: ""; width: 7px; height: 7px; border-radius: 2px; background: var(--accent); }
+    h1 { margin: 14px 0 0; font: 800 clamp(40px, 7vw, 72px)/.98 Geist, sans-serif; letter-spacing: -.035em; }
+    h1 em { font-style: normal; color: var(--accent); }
+    .lead { margin: 20px 0 0; max-width: 34em; color: var(--muted); font-size: clamp(17px, 2vw, 19px); }
+    .button { display: inline-flex; align-items: center; gap: 10px; min-height: 52px; margin-top: 28px; padding: 0 22px; border-radius: 14px; font: 600 16px/1 Geist, sans-serif; text-decoration: none; background: var(--accent); color: var(--on-accent); }
+
+    .cards { position: relative; width: min(520px, 100%); margin: 0 auto; aspect-ratio: 3.5 / 3.1; }
+    .cards img { position: absolute; width: 72%; height: auto; border-radius: 9px; box-shadow: 0 24px 60px rgba(0, 0, 0, .55); }
+    .cards .front { left: 0; top: 0; transform: rotate(-4deg); z-index: 1; }
+    .cards .back { right: 0; bottom: 0; transform: rotate(3deg); }
+    .caption { text-align: center; color: var(--faint); font: 500 12px/1.5 "Geist Mono", ui-monospace, monospace; margin: 14px 0 0; }
+
+    section { padding: 72px 0 0; }
+    h2 { margin: 0; font: 800 clamp(30px, 4.4vw, 44px)/1.04 Geist, sans-serif; letter-spacing: -.03em; }
+    .sub { color: var(--muted); max-width: 40em; margin: 14px 0 0; }
+
+    .flow { display: grid; grid-template-columns: 1fr; gap: 28px; margin-top: 36px; }
+    .phone { margin: 0; }
+    .phone .screen { position: relative; width: min(330px, 84vw); aspect-ratio: 390 / 844; margin: 0 auto; border-radius: 38px; overflow: hidden; background: #111212; border: 8px solid #222424; box-shadow: 0 30px 80px rgba(0, 0, 0, .5); }
+    /* The apps lay out at a phone's 390 px and are scaled to the frame (script below). */
+    .phone iframe { position: absolute; top: 0; left: 0; width: 390px; height: 844px; border: 0; transform: scale(var(--scale, .78)); transform-origin: 0 0; background: #111212; }
+    .phone figcaption { text-align: center; margin-top: 16px; color: var(--muted); font-size: 15px; }
+    .phone figcaption b { display: block; color: var(--text); font-weight: 600; font-size: 17px; }
+    .note { text-align: center; color: var(--faint); font: 500 12.5px/1.6 "Geist Mono", ui-monospace, monospace; margin: 28px auto 0; max-width: 46em; }
+    .again { margin-top: 12px; min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--text); font: 500 13px/1 "Geist Mono", ui-monospace, monospace; cursor: pointer; }
+    .again:hover { border-color: var(--faint); }
+
+    .points { display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 32px; }
+    .point { border: 1px solid var(--line); border-radius: 16px; padding: 20px; background: var(--surface); }
+    .point h3 { margin: 0; font: 600 18px/1.3 Geist, sans-serif; }
+    .point p { margin: 8px 0 0; color: var(--muted); font-size: 15.5px; }
+    .num { font: 500 12px/1 "Geist Mono", ui-monospace, monospace; color: var(--accent); }
+
+    .toast { position: fixed; left: 50%; bottom: 18px; z-index: 10; transform: translate(-50%, calc(100% + 40px)); transition: transform .35s cubic-bezier(.2, .8, .2, 1); border: 0; border-radius: 999px; padding: 13px 20px; background: var(--accent); color: var(--on-accent); font: 600 15px/1 Geist, sans-serif; cursor: pointer; box-shadow: 0 12px 40px rgba(0, 0, 0, .5); white-space: nowrap; }
+    .toast.shown { transform: translate(-50%, 0); }
+    footer { padding: 72px 0 48px; color: var(--faint); font-size: 14px; }
+
+    @media (min-width: 760px) {
+      .flow { grid-template-columns: 1fr 1fr; }
+      .points { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 980px) {
+      .hero { grid-template-columns: 1fr 1fr; padding-top: 48px; }
+      .points { grid-template-columns: repeat(4, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 6.8v4.6c0 .5.2 1 .6 1.4l6.1 6.1c.8.8 2 .8 2.8 0l4.1-4.1c.8-.8.8-2 0-2.8l-6.1-6.1c-.4-.4-.9-.6-1.4-.6H6.8C5.8 5.3 5 6 5 6.8z" fill="var(--on-accent)"/><circle cx="8.4" cy="8.6" r="1.3" fill="var(--accent)"/></svg></span>
+        <span data-name>Coches al Contado</span>
+      </div>
+      <span class="badge">Demo</span>
+    </header>
+
+    <div class="hero">
+      <div>
+        <div class="kicker">Para compradores de coches usados</div>
+        <h1>Cada tarjeta en un parabrisas <em>puede traerte un vendedor.</em></h1>
+        <p class="lead">Mucha gente que nunca llamaría a un desconocido sí escanea un código. Responde unas preguntas en el móvil en pocos minutos, y a ti te llega una notificación con el coche, el precio y las fotos, lista para la primera llamada.</p>
+        <a class="button" href="#try">Pruébalo tú mismo ↓</a>
+      </div>
+      <div>
+        <div class="cards">
+          <img class="front" id="card-front" src="../assets/card/es/lime-front.webp" alt="Una tarjeta de ejemplo, anverso: Compramos tu coche, con un código QR" width="964" height="624">
+          <img class="back" id="card-back" src="../assets/card/es/lime-back.webp" alt="Una tarjeta de ejemplo, reverso: qué compramos, el código QR otra vez y el teléfono" width="964" height="624">
+        </div>
+        <p class="caption">Una tarjeta de ejemplo. La tuya lleva tu nombre, tu teléfono y tu color.</p>
+      </div>
+    </div>
+
+    <section id="try">
+      <div class="kicker">Demo en directo</div>
+      <h2>Sé el vendedor. Luego sé el comprador.</h2>
+      <p class="sub">En el primer móvil, responde como lo haría quien encontró tu tarjeta. En cuanto deja sus datos de contacto, la solicitud llega al segundo móvil con una notificación. Tócala, cambia el estado, añade una nota.</p>
+      <div class="flow">
+        <figure class="phone">
+          <div class="screen"><iframe data-src="../demo/es/index.html?src=card" title="El formulario del vendedor, una demo que funciona"></iframe></div>
+          <figcaption><b>El vendedor</b>Encontró tu tarjeta y la escaneó. Sin app ni cuenta.</figcaption>
+        </figure>
+        <figure class="phone" id="buyer">
+          <div class="screen"><iframe data-src="../demo/es/app/index.html" title="Tu app, una demo que funciona"></iframe></div>
+          <figcaption><b>Tú</b>Una notificación en segundos y un toque para llamar.</figcaption>
+        </figure>
+      </div>
+      <p class="note">Una demo que funciona, con solicitudes inventadas y fotos de coches generadas por IA. Nada de lo que escribas sale de esta página.<br><button class="again" id="restart" type="button">Empezar de nuevo</button></p>
+    </section>
+
+    <section>
+      <div class="kicker">Lo que recibes</div>
+      <h2>Todo lo que hay entre la tarjeta y la llamada.</h2>
+      <div class="points">
+        <div class="point"><span class="num">01</span><h3>Tarjetas con tu código QR</h3><p>Un archivo listo para imprimir en tus colores, para cualquier imprenta. Cada sitio puede tener su propio código, así ves qué tarjetas y qué zonas te traen coches.</p></div>
+        <div class="point"><span class="num">02</span><h3>Un formulario que los vendedores terminan</h3><p>Una pregunta por pantalla, sin app ni cuenta, fotos directamente desde el móvil. Si lo dejan a medias, les espera una semana.</p></div>
+        <div class="point"><span class="num">03</span><h3>Una notificación en segundos</h3><p>El coche, el precio y las fotos en tu móvil. El nombre y el número del vendedor nunca aparecen en la pantalla de bloqueo.</p></div>
+        <div class="point"><span class="num">04</span><h3>Todas las solicitudes en una app</h3><p>Nuevas, en curso, compradas, descartadas. Notas, un toque para llamar o escribir, y estadísticas de qué te trae coches.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="kicker">Tuyo</div>
+      <h2>Tu nombre, tus colores, tu dirección web.</h2>
+      <p class="sub">El formulario, la app y las tarjetas llevan el nombre, el color y el logo de tu negocio, en tu propia dirección web. Funciona en tu propia cuenta y las solicitudes son tuyas. Los datos personales de los vendedores se borran solos 90 días después de cerrar un trato.</p>
+    </section>
+
+    <footer>¿Dudas? Pregunta a quien te envió este enlace.</footer>
+  </div>
+  <button class="toast" id="toast" type="button">Nueva solicitud en tu móvil ↓</button>
+
+  <script>
+    (function () {
+      // The two apps get the same name and color as this page.
+      var params = new URLSearchParams(location.search);
+      var frames = Array.prototype.slice.call(document.querySelectorAll('iframe[data-src]'));
+      function load(fresh) {
+        frames.forEach(function (frame) {
+          var url = new URL(frame.getAttribute('data-src'), location.href);
+          ['name', 'color'].forEach(function (key) { if (params.get(key)) url.searchParams.set(key, params.get(key)); });
+          if (fresh) url.searchParams.set('fresh', Date.now());
+          frame.src = url.href;
+        });
+      }
+      function fit() {
+        frames.forEach(function (frame) {
+          var screen = frame.parentElement;
+          var scale = screen.clientWidth / 390;
+          frame.style.setProperty('--scale', scale);
+          frame.style.height = screen.clientHeight / scale + 'px';
+        });
+      }
+      load(false);
+      fit();
+      window.addEventListener('resize', fit);
+      document.getElementById('restart').addEventListener('click', function () {
+        window.__carBuyoutDemo = undefined;
+        load(true);
+      });
+
+      // On a phone the app is below the form: point at it when a lead arrives.
+      var toast = document.getElementById('toast');
+      var buyer = document.getElementById('buyer');
+      var timer;
+      toast.addEventListener('click', function () {
+        toast.classList.remove('shown');
+        buyer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+      if ('BroadcastChannel' in window) {
+        new BroadcastChannel('car-buyout-demo').addEventListener('message', function () {
+          var box = buyer.getBoundingClientRect();
+          if (box.top < window.innerHeight * 0.6 && box.bottom > window.innerHeight * 0.4) return;
+          toast.classList.add('shown');
+          clearTimeout(timer);
+          timer = setTimeout(function () { toast.classList.remove('shown'); }, 6000);
+        });
+      }
+    })();
+  </script>
+  <script type="module">
+    import { business, wear } from '../demo/brand.js';
+
+    const visitor = business();
+    if (visitor.colors) wear(visitor.colors);
+    if (visitor.name) {
+      const brand = document.querySelector('[data-name]').textContent;
+      for (const element of document.querySelectorAll('[data-name]')) element.textContent = visitor.name;
+      document.title = document.title.replace(brand, visitor.name);
+    }
+    // The sample card in the shade closest to the business's color.
+    const CARDS = { lime: '#C7F747', orange: '#FF8A00', yellow: '#FFD60A', red: '#FF4D4D', blue: '#3DA5FF', mint: '#3DDC97' };
+    const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+    const target = rgb(visitor.colors ? visitor.colors['--accent'] : CARDS.lime);
+    const distance = (hex) => rgb(hex).reduce((sum, channel, i) => sum + (channel - target[i]) ** 2, 0);
+    const [closest] = Object.keys(CARDS).sort((a, b) => distance(CARDS[a]) - distance(CARDS[b]));
+    for (const side of ['front', 'back']) {
+      const card = document.getElementById(`card-${side}`);
+      card.src = card.getAttribute('src').replace(/[a-z]+-(front|back)\.webp$/, `${closest}-$1.webp`);
+    }
+    document.documentElement.classList.remove('pending');
+  </script>
+</body>
+</html>
