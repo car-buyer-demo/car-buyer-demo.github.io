@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <!-- Shared by link with one business at a time, never meant to be found. -->
   <meta name="robots" content="noindex">
-  <title>Car Buyout · Leads from your windshield cards</title>
+  <title>Car Buyout · Be first to call</title>
   <meta name="description" content="A working demo: the form a seller fills in after scanning your code or tapping your link, and the app where the lead arrives with a push.">
   <meta name="theme-color" content="#0b0c0c">
   <script>
@@ -70,6 +70,10 @@
     .cards .back { right: 0; bottom: 0; transform: rotate(3deg); }
     .caption { text-align: center; color: var(--faint); font: 500 12px/1.5 "Geist Mono", ui-monospace, monospace; margin: 14px 0 0; }
 
+    .places { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 28px 0 0; padding: 0; list-style: none; }
+    .place { display: flex; flex-direction: column; gap: 12px; border: 1px solid var(--line); border-radius: 16px; padding: 16px; background: var(--surface); font-size: 15px; line-height: 1.35; }
+    .place svg { display: block; width: 26px; height: 26px; fill: none; stroke: var(--accent); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
     section { padding: 72px 0 0; }
     h2 { margin: 0; font: 800 clamp(30px, 4.4vw, 44px)/1.04 Geist, sans-serif; letter-spacing: -.03em; }
     .sub { color: var(--muted); max-width: 40em; margin: 14px 0 0; }
@@ -96,6 +100,7 @@
     footer { padding: 72px 0 48px; color: var(--faint); font-size: 14px; }
 
     @media (min-width: 760px) {
+      .places { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .flow { grid-template-columns: 1fr 1fr; }
       .points { grid-template-columns: repeat(2, 1fr); }
     }
@@ -118,8 +123,8 @@
     <div class="hero">
       <div>
         <div class="kicker">For cash-for-cars buyers</div>
-        <h1>Every card under a wiper <em>can bring you a seller.</em></h1>
-        <p class="lead">Many people who would never call a stranger will scan a code. They answer a few questions on their phone in a few minutes, and you get a push with the car, the price and photos, ready for the first call.</p>
+        <h1>Be first to call. <em>Buy more cars.</em></h1>
+        <p class="lead">Put your QR code on cards, stickers, signs and at partner shops, or add your link to your Google Maps listing. The moment a seller leaves their contacts, a push hits your phone, so you call while they're still looking for a buyer.</p>
         <a class="button" href="#try">Try it yourself ↓</a>
       </div>
       <div>
@@ -131,14 +136,29 @@
       </div>
     </div>
 
+    <!-- The card is one place among many: each gets its own code or link. -->
+    <section>
+      <div class="kicker">One code, any place</div>
+      <h2>See which places bring you sellers.</h2>
+      <ul class="places">
+        <li class="place"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="8" width="18" height="12" rx="2"/><rect x="6" y="11" width="5" height="5" rx="1"/><path d="M14 12h4M14 15h3M2.5 6 15 3.5"/></svg>A card under a wiper</li>
+        <li class="place"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 16.5v-3.2l2.6-5.1c.3-.6.9-1 1.6-1h8.4c.6 0 1.1.3 1.5.7l3.4 4 2.4.6c.6.2 1.1.7 1.1 1.4v2.6M8.6 17h6.8"/><circle cx="6" cy="17" r="2.4"/><circle cx="18" cy="17" r="2.4"/><rect x="9.3" y="9.6" width="4" height="3.4" rx=".6"/></svg>A sticker on your own car</li>
+        <li class="place"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 4l9 6.5V20H3zM7 20v-6.5h10V20M7 16.8h10"/></svg>A poster at a partner repair shop or tow company</li>
+        <li class="place"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="9" rx="1.5"/><path d="M12 12.5V21M8.5 21h7M7 7h6M7 9.5h9"/></svg>A sign or banner</li>
+        <li class="place"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg>A link in your Google Maps listing</li>
+        <li class="place"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5h16a1 1 0 0 1 1 1V16a1 1 0 0 1-1 1h-9l-4.5 3.5V17H4a1 1 0 0 1-1-1V5.5a1 1 0 0 1 1-1zM7.5 9.5h9M7.5 12.5h5.5"/></svg>A text after a missed call</li>
+      </ul>
+      <p class="sub">Every place gets its own code or link, and the app shows which one brings cars.</p>
+    </section>
+
     <section id="try">
       <div class="kicker">Live demo</div>
       <h2>Be the seller. Then be the buyer.</h2>
-      <p class="sub">On the first phone, answer as someone who found your card would. The moment the contact details are in, the lead lands on the second phone with a push. Tap it, change the status, add a note.</p>
+      <p class="sub">On the first phone, answer as a seller who scanned your code would. The moment the contact details are in, the lead lands on the second phone with a push. Tap it, change the status, add a note.</p>
       <div class="flow">
         <figure class="phone">
           <div class="screen"><iframe data-src="demo/index.html?src=card" title="The seller's form, a working demo"></iframe></div>
-          <figcaption><b>The seller</b>Found your card, scanned it. No app, no account.</figcaption>
+          <figcaption><b>The seller</b>Scanned your code. No app, no account.</figcaption>
         </figure>
         <figure class="phone" id="buyer">
           <div class="screen"><iframe data-src="demo/app/index.html" title="Your app, a working demo"></iframe></div>
@@ -150,11 +170,11 @@
 
     <section>
       <div class="kicker">What you get</div>
-      <h2>Everything between the card and the call.</h2>
+      <h2>Everything between the scan and the call.</h2>
       <div class="points">
-        <div class="point"><span class="num">01</span><h3>Cards with your QR code</h3><p>A print-ready file in your colors for any print shop. Each placement can get its own code, so you see which places bring cars.</p></div>
+        <div class="point"><span class="num">01</span><h3>Your QR codes and links</h3><p>A print-ready card in your colors, and its own code or link for every other place, so you see which places bring cars.</p></div>
         <div class="point"><span class="num">02</span><h3>A form sellers finish</h3><p>One question per screen, no app, no account, photos straight from the phone. A form left halfway waits for them for a week.</p></div>
-        <div class="point"><span class="num">03</span><h3>A push in seconds</h3><p>The car, the price and the photos on your phone. The seller's name and number never show on the lock screen.</p></div>
+        <div class="point"><span class="num">03</span><h3>A push in seconds</h3><p>The car, plus the asking price and photos if the seller adds them. The seller's name and number never show on the lock screen.</p></div>
         <div class="point"><span class="num">04</span><h3>Every lead in one app</h3><p>New, in progress, purchased, rejected. Notes, one tap to call or message, and statistics on what brings cars.</p></div>
       </div>
     </section>

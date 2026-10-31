@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <!-- Shared by link with one business at a time, never meant to be found. -->
   <meta name="robots" content="noindex">
-  <title>Autos al Contado · Prospectos desde sus tarjetas</title>
+  <title>Autos al Contado · Llame primero</title>
   <meta name="description" content="Una demo que funciona: el formulario que llena un vendedor al escanear su código o tocar su enlace, y la app donde llega el prospecto con una notificación.">
   <meta name="theme-color" content="#0b0c0c">
   <script>
@@ -70,6 +70,10 @@
     .cards .back { right: 0; bottom: 0; transform: rotate(3deg); }
     .caption { text-align: center; color: var(--faint); font: 500 12px/1.5 "Geist Mono", ui-monospace, monospace; margin: 14px 0 0; }
 
+    .places { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 28px 0 0; padding: 0; list-style: none; }
+    .place { display: flex; flex-direction: column; gap: 12px; border: 1px solid var(--line); border-radius: 16px; padding: 16px; background: var(--surface); font-size: 15px; line-height: 1.35; }
+    .place svg { display: block; width: 26px; height: 26px; fill: none; stroke: var(--accent); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
     section { padding: 72px 0 0; }
     h2 { margin: 0; font: 800 clamp(30px, 4.4vw, 44px)/1.04 Geist, sans-serif; letter-spacing: -.03em; }
     .sub { color: var(--muted); max-width: 40em; margin: 14px 0 0; }
@@ -96,6 +100,7 @@
     footer { padding: 72px 0 48px; color: var(--faint); font-size: 14px; }
 
     @media (min-width: 760px) {
+      .places { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .flow { grid-template-columns: 1fr 1fr; }
       .points { grid-template-columns: repeat(2, 1fr); }
     }
@@ -118,8 +123,8 @@
     <div class="hero">
       <div>
         <div class="kicker">Para compradores de autos usados</div>
-        <h1>Cada tarjeta en un parabrisas <em>puede traerle un vendedor.</em></h1>
-        <p class="lead">Mucha gente que nunca llamaría a un desconocido sí escanea un código. Contesta unas preguntas en su teléfono en pocos minutos, y a usted le llega una notificación con el auto, el precio y las fotos, listo para la primera llamada.</p>
+        <h1>Llame primero. <em>Compre más autos.</em></h1>
+        <p class="lead">Ponga su código QR en tarjetas, calcomanías, letreros y en talleres aliados, o agregue su enlace a su perfil de Google Maps. En cuanto un vendedor deja sus datos, le llega una notificación al teléfono y usted llama mientras él todavía busca comprador.</p>
         <a class="button" href="#try">Pruébelo usted mismo ↓</a>
       </div>
       <div>
@@ -131,14 +136,29 @@
       </div>
     </div>
 
+    <!-- The card is one place among many: each gets its own code or link. -->
+    <section>
+      <div class="kicker">Un código, cualquier lugar</div>
+      <h2>Vea qué lugares le traen vendedores.</h2>
+      <ul class="places">
+        <li class="place"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="8" width="18" height="12" rx="2"/><rect x="6" y="11" width="5" height="5" rx="1"/><path d="M14 12h4M14 15h3M2.5 6 15 3.5"/></svg>Una tarjeta en el parabrisas</li>
+        <li class="place"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 16.5v-3.2l2.6-5.1c.3-.6.9-1 1.6-1h8.4c.6 0 1.1.3 1.5.7l3.4 4 2.4.6c.6.2 1.1.7 1.1 1.4v2.6M8.6 17h6.8"/><circle cx="6" cy="17" r="2.4"/><circle cx="18" cy="17" r="2.4"/><rect x="9.3" y="9.6" width="4" height="3.4" rx=".6"/></svg>Una calcomanía en su propio auto</li>
+        <li class="place"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 4l9 6.5V20H3zM7 20v-6.5h10V20M7 16.8h10"/></svg>Un póster en un taller o una grúa aliados</li>
+        <li class="place"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="9" rx="1.5"/><path d="M12 12.5V21M8.5 21h7M7 7h6M7 9.5h9"/></svg>Un letrero o una lona</li>
+        <li class="place"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg>Un enlace en su perfil de Google Maps</li>
+        <li class="place"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5h16a1 1 0 0 1 1 1V16a1 1 0 0 1-1 1h-9l-4.5 3.5V17H4a1 1 0 0 1-1-1V5.5a1 1 0 0 1 1-1zM7.5 9.5h9M7.5 12.5h5.5"/></svg>Un mensaje de texto tras una llamada perdida</li>
+      </ul>
+      <p class="sub">Cada lugar tiene su propio código o enlace, y la app muestra cuál le trae autos.</p>
+    </section>
+
     <section id="try">
       <div class="kicker">Demo en vivo</div>
       <h2>Sea el vendedor. Luego sea el comprador.</h2>
-      <p class="sub">En el primer teléfono, conteste como lo haría alguien que encontró su tarjeta. En cuanto deja sus datos de contacto, el prospecto llega al segundo teléfono con una notificación. Tóquela, cambie el estado, agregue una nota.</p>
+      <p class="sub">En el primer teléfono, conteste como lo haría un vendedor que escaneó su código. En cuanto deja sus datos de contacto, el prospecto llega al segundo teléfono con una notificación. Tóquela, cambie el estado, agregue una nota.</p>
       <div class="flow">
         <figure class="phone">
           <div class="screen"><iframe data-src="../demo/us-es/index.html?src=card" title="El formulario del vendedor, una demo que funciona"></iframe></div>
-          <figcaption><b>El vendedor</b>Encontró su tarjeta y la escaneó. Sin app ni cuenta.</figcaption>
+          <figcaption><b>El vendedor</b>Escaneó su código. Sin app ni cuenta.</figcaption>
         </figure>
         <figure class="phone" id="buyer">
           <div class="screen"><iframe data-src="../demo/us-es/app/index.html" title="Su app, una demo que funciona"></iframe></div>
@@ -150,11 +170,11 @@
 
     <section>
       <div class="kicker">Lo que recibe</div>
-      <h2>Todo lo que hay entre la tarjeta y la llamada.</h2>
+      <h2>Todo lo que hay entre el escaneo y la llamada.</h2>
       <div class="points">
-        <div class="point"><span class="num">01</span><h3>Tarjetas con su código QR</h3><p>Un archivo listo para imprimir en sus colores, para cualquier imprenta. Cada lugar puede tener su propio código, así ve qué lugares le traen autos.</p></div>
+        <div class="point"><span class="num">01</span><h3>Sus códigos QR y enlaces</h3><p>Una tarjeta lista para imprimir en sus colores, y un código o enlace propio para cada lugar donde se anuncie, así ve cuáles le traen autos.</p></div>
         <div class="point"><span class="num">02</span><h3>Un formulario que los vendedores terminan</h3><p>Una pregunta por pantalla, sin app ni cuenta, fotos directo del teléfono. Si lo dejan a medias, los espera una semana.</p></div>
-        <div class="point"><span class="num">03</span><h3>Una notificación en segundos</h3><p>El auto, el precio y las fotos en su teléfono. El nombre y el número del vendedor nunca aparecen en la pantalla bloqueada.</p></div>
+        <div class="point"><span class="num">03</span><h3>Una notificación en segundos</h3><p>El auto, y también el precio y las fotos si el vendedor los agrega. El nombre y el número del vendedor nunca aparecen en la pantalla bloqueada.</p></div>
         <div class="point"><span class="num">04</span><h3>Todos los prospectos en una app</h3><p>Nuevos, en proceso, comprados, rechazados. Notas, un toque para llamar o escribir, y estadísticas de qué le trae autos.</p></div>
       </div>
     </section>
